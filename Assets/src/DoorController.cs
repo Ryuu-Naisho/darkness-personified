@@ -23,12 +23,14 @@ public class DoorController : MonoBehaviour
     }
 
 
+    ///<summary>Set door to open position.</summary>
     private void OnDoorwayOpen()
     {
         transform.position += Vector3.up * 10;
     }
 
 
+    ///<summary>Set door to closed position.</summary>
     private void OnDoorwayClose()
     {
         transform.position = initialPosition;

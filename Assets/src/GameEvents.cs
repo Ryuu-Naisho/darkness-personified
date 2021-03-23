@@ -18,6 +18,7 @@ public class GameEvents : MonoBehaviour
     }
 
 
+    ///<summary>Trigger door enter event.</summary>
     public void DoorwayTriggerEnter()
     {
         if (onDoorwayTriggerEnter != null)
@@ -27,6 +28,7 @@ public class GameEvents : MonoBehaviour
     }
 
 
+    ///<summary>Trigger door exit event.</summary>
     public void DoorwayTriggerExit()
     {
         if(onDoorwayTriggerExit != null)
