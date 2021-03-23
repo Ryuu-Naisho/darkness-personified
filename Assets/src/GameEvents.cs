@@ -8,8 +8,8 @@ public class GameEvents : MonoBehaviour
 
 
     public static GameEvents events;
-    public event Action onDoorwayTriggerEnter;
-    public event Action onDoorwayTriggerExit;
+    public event Action<int> onDoorwayTriggerEnter;
+    public event Action<int> onDoorwayTriggerExit;
 
 
     private void Awake()
@@ -19,21 +19,23 @@ public class GameEvents : MonoBehaviour
 
 
     ///<summary>Trigger door enter event.</summary>
-    public void DoorwayTriggerEnter()
+    ///<param name="id">int id, instance id of gameObject.</param>
+    public void DoorwayTriggerEnter(int id)
     {
         if (onDoorwayTriggerEnter != null)
         {
-            onDoorwayTriggerEnter();
+            onDoorwayTriggerEnter(id);
         }
     }
 
 
     ///<summary>Trigger door exit event.</summary>
-    public void DoorwayTriggerExit()
+    ///<param name="id">int id, instance id of gameObject.</param>
+    public void DoorwayTriggerExit(int id)
     {
         if(onDoorwayTriggerExit != null)
         {
-            onDoorwayTriggerExit();
+            onDoorwayTriggerExit(id);
         }
     }
 }

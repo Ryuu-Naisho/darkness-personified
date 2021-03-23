@@ -5,12 +5,14 @@ using UnityEngine;
 public class DoorController : MonoBehaviour
 {
     private Vector3 initialPosition;
+    private int parentID;
 
 
 
     // Start is called before the first frame update
     void Start()
     {
+        parentID = transform.parent.gameObject.GetInstanceID();
         initialPosition = transform.position;
         GameEvents.events.onDoorwayTriggerEnter += OnDoorwayOpen;
         GameEvents.events.onDoorwayTriggerExit += OnDoorwayClose;
@@ -24,15 +26,19 @@ public class DoorController : MonoBehaviour
 
 
     ///<summary>Set door to open position.</summary>
-    private void OnDoorwayOpen()
+    ///<param name="id">int id, instance id of the gameObject.</param>
+    private void OnDoorwayOpen(int id)
     {
-        transform.position += Vector3.up * 10;
+        if (id == parentID)
+            transform.position += Vector3.up * 5;
     }
 
 
     ///<summary>Set door to closed position.</summary>
-    private void OnDoorwayClose()
+    ///<param name="id">int id, instance id of the gameObject.</param>
+    private void OnDoorwayClose(int id)
     {
-        transform.position = initialPosition;
+        if (id == parentID)
+            transform.position = initialPosition;
     }
 }
