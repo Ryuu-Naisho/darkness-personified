@@ -1,0 +1,9 @@
+<ItemCollection>
+    <Items>
+        <Item name="BoxOne">
+            <ID>1</ID>
+            <Collected>false</Collected>
+            <Memory>Good</Memory>
+        </Item>
+    </Items>
+</ItemCollection>
