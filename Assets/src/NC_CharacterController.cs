@@ -16,6 +16,7 @@ public class NC_CharacterController : MonoBehaviour
     public Camera playerCamera;
     public float lookSpeed;
     public float lookXLimit;
+    public float lookDistance;
     public AudioClip[] WalkOnWoodSound;
     public AudioClip[] RunOnWoodSound;
     private CharacterController characterController;
@@ -124,6 +125,9 @@ public class NC_CharacterController : MonoBehaviour
         transform.eulerAngles = new Vector2(0, rotation.y);
 
 
+        //Set triggers off by watching them.
+        TriggerWatch();
+
         //TODO other player keys should be added below.
 
 
@@ -174,6 +178,25 @@ public class NC_CharacterController : MonoBehaviour
             audio_toggleChange = false;
         }
     }
+
+
+    ///<summary>Use the character's line of sight to trigger certain events. Waits one second before triggering.</summary>
+    private void TriggerWatch()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, lookDistance))
+            if (hit.collider.isTrigger)
+            {
+                string tag = hit.collider.tag;
+                if (tag == "ShapeShifter")
+                {
+                    int ID = hit.transform.parent.gameObject.GetInstanceID();
+                    Action triggerEvent = ()=> GameEvents.events.ShapeShiftTrigger(ID);
+                    StartCoroutine(Wait(1,triggerEvent));
+                }
+            }
+    }
+
 
 
     private IEnumerator Wait(float time, Action onComplete)
