@@ -17,6 +17,7 @@ public class NC_CharacterController : MonoBehaviour
     public float lookSpeed;
     public float lookXLimit;
     public AudioClip[] WalkOnWoodSound;
+    public AudioClip[] RunOnWoodSound;
     private CharacterController characterController;
     private AudioSource audioSource;
     private HeadBob headBob;
@@ -28,10 +29,12 @@ public class NC_CharacterController : MonoBehaviour
     private bool audio_play;
     private bool audio_toggleChange;
     private bool stepping = false;
-    private bool firstStep = true;
+    private bool isRunning = false;
     private Vector3 currentVelocity;
     private Vector3 previousVelocity;
     private float stepOffset;
+    private float walkingMoveSpeed;
+    private float RunningMoveSpeed;
 
 
 
@@ -48,7 +51,9 @@ public class NC_CharacterController : MonoBehaviour
         previousVelocity = currentVelocity;
         stepOffset = characterController.stepOffset;
         initialSpeed = speed;
-        moveSpeed = ((1/speed)+stepOffset * speed);
+        walkingMoveSpeed = ((1/speed)+stepOffset * speed);
+        RunningMoveSpeed = walkingMoveSpeed * 2;
+        moveSpeed = walkingMoveSpeed;
     }
 
     // Update is called once per frame
@@ -78,9 +83,17 @@ public class NC_CharacterController : MonoBehaviour
 
 
             if (Input.GetKeyDown("left shift"))
+            {
                 speed = runSpeed;
+                moveSpeed = RunningMoveSpeed;
+                isRunning = true;
+            }
             if (Input.GetKeyUp("left shift"))
+            {
                 speed = initialSpeed;
+                moveSpeed = walkingMoveSpeed;
+                isRunning = false;
+            }
         }
 
 
@@ -95,7 +108,7 @@ public class NC_CharacterController : MonoBehaviour
 
         if (currentVelocity != previousVelocity && canMove)
         {
-            Walk();
+            Step();
         }
         else
         {
@@ -119,10 +132,16 @@ public class NC_CharacterController : MonoBehaviour
 
 
     ///<summary>Do step sounds and head bobbing movement.</summary>
-    private void Walk(){
+    private void Step(){
         if (!stepping)
         {
-            int stepSound = UnityEngine.Random.Range(0, WalkOnWoodSound.Length);
+            int stepSound = 0;
+            if (!isRunning)
+                stepSound = UnityEngine.Random.Range(0, WalkOnWoodSound.Length);
+            else
+            {
+                stepSound = UnityEngine.Random.Range(0, RunOnWoodSound.Length);
+            }
             float stepSpeed = (1/speed) + stepOffset + stepDelay;
             stepping = true;
             PlayClip(WalkOnWoodSound[stepSound]);
