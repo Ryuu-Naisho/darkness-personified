@@ -95,7 +95,7 @@ public class NC_CharacterController : MonoBehaviour
 
         if (currentVelocity != previousVelocity && canMove)
         {
-                Walk();
+            Walk();
         }
         else
         {
@@ -120,7 +120,7 @@ public class NC_CharacterController : MonoBehaviour
 
     ///<summary>Do step sounds and head bobbing movement.</summary>
     private void Walk(){
-        if (!stepping && !firstStep)
+        if (!stepping)
         {
             int stepSound = UnityEngine.Random.Range(0, WalkOnWoodSound.Length);
             float stepSpeed = (1/speed) + stepOffset + stepDelay;
