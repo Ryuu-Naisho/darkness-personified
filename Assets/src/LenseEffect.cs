@@ -2,14 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+[RequireComponent(typeof(AudioSource))]
 public class LenseEffect : MonoBehaviour
 {
     public float maxFieldOfView;
     public float sinkEffectRate;
+    public AudioClip bassDrop;
+    private AudioSource audioSource;
     private float initialFieldOfView;
     private float currentFieldOfView;
     private Camera camera;
     private bool isSinking = false;
+    private bool audio_play;
+    private bool audio_toggleChange;
 
 
 
@@ -17,6 +23,7 @@ public class LenseEffect : MonoBehaviour
     void Start()
     {
         camera = GetComponent<Camera>();
+        audioSource = GetComponent<AudioSource>();
         initialFieldOfView = camera.fieldOfView;
         currentFieldOfView = initialFieldOfView;
     }
@@ -25,7 +32,10 @@ public class LenseEffect : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown("c") && !isSinking)
+        {
             isSinking = true;
+            PlayClip(bassDrop);
+        }
 
 
 
@@ -47,5 +57,29 @@ public class LenseEffect : MonoBehaviour
             currentFieldOfView = initialFieldOfView;
         }
         camera.fieldOfView = currentFieldOfView;
+    }
+
+
+        ///<summary>Play audio clip once.</summary>
+    ///<param name="clip">AudioClip to play.</param>
+    private void PlayClip(AudioClip clip)
+    {
+        audio_play = true;
+        audio_toggleChange = true;
+        //Check if you just set the toggle to positive.
+        if (audio_play == true && audio_toggleChange == true)
+        {
+            audioSource.clip = clip;
+            audioSource.Play();
+            audio_toggleChange = false;
+        }
+        //Check if you just set the toggle to false
+        if (audio_play == false && audio_toggleChange == true)
+        {
+            //Stop the audio
+            audioSource.Stop();
+            //Ensure audio doesn't play more than once
+            audio_toggleChange = false;
+        }
     }
 }
