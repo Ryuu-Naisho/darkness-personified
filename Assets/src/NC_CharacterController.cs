@@ -5,18 +5,33 @@ using UnityEngine;
 
 
 [RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(AudioSource))]
 public class NC_CharacterController : MonoBehaviour
 {
     public float speed;
+    public float runSpeed;
+    public float stepDelay;
     public float jumpSpeed;
     public float gravity;
     public Camera playerCamera;
     public float lookSpeed;
     public float lookXLimit;
+    public AudioClip[] WalkOnWoodSound;
     private CharacterController characterController;
+    private AudioSource audioSource;
+    private HeadBob headBob;
     private Vector3 moveDirection = Vector3.zero;
     private Vector2 rotation = Vector2.zero;
+    private float initialSpeed;
+    private float moveSpeed;
     private bool canMove = true;
+    private bool audio_play;
+    private bool audio_toggleChange;
+    private bool stepping = false;
+    private bool firstStep = true;
+    private Vector3 currentVelocity;
+    private Vector3 previousVelocity;
+    private float stepOffset;
 
 
 
@@ -24,10 +39,16 @@ public class NC_CharacterController : MonoBehaviour
     void Start()
     {
         characterController = GetComponent<CharacterController>();
+        audioSource = GetComponent<AudioSource>();
+        headBob = playerCamera.GetComponent<HeadBob>();
         rotation.y = transform.eulerAngles.y;
-
         //Keep the mouse inside the game screen
-        Cursor.lockState = CursorLockMode.Locked;    
+        Cursor.lockState = CursorLockMode.Locked;
+        currentVelocity = characterController.velocity;
+        previousVelocity = currentVelocity;
+        stepOffset = characterController.stepOffset;
+        initialSpeed = speed;
+        moveSpeed = ((1/speed)+stepOffset * speed);
     }
 
     // Update is called once per frame
@@ -40,8 +61,8 @@ public class NC_CharacterController : MonoBehaviour
             {
                 Vector3 forward = transform.TransformDirection(Vector3.forward);
                 Vector3 right = transform.TransformDirection(Vector3.right);
-                float curSpeedX = canMove ? speed * Input.GetAxis("Vertical") : 0;
-                float curSpeedY = canMove ? speed * Input.GetAxis("Horizontal") : 0;
+                float curSpeedX = canMove ? moveSpeed * Input.GetAxis("Vertical") : 0;
+                float curSpeedY = canMove ? moveSpeed * Input.GetAxis("Horizontal") : 0;
                 moveDirection = (forward * curSpeedX) + (right * curSpeedY);
             }
             catch (Exception e)
@@ -54,6 +75,12 @@ public class NC_CharacterController : MonoBehaviour
             {
                 moveDirection.y = jumpSpeed;
             }
+
+
+            if (Input.GetKeyDown("left shift"))
+                speed = runSpeed;
+            if (Input.GetKeyUp("left shift"))
+                speed = initialSpeed;
         }
 
 
@@ -61,8 +88,19 @@ public class NC_CharacterController : MonoBehaviour
         moveDirection.y -= gravity * Time.deltaTime;
 
 
+
         //Move the controller
         characterController.Move(moveDirection * Time.deltaTime);
+        currentVelocity = characterController.velocity;
+
+        if (currentVelocity != previousVelocity && canMove)
+        {
+                Walk();
+        }
+        else
+        {
+            headBob.Idle(speed);
+        }
 
 
         //Player and Camera rotation
@@ -73,6 +111,55 @@ public class NC_CharacterController : MonoBehaviour
         transform.eulerAngles = new Vector2(0, rotation.y);
 
 
-        //TODO other player keys should be added below. 
+        //TODO other player keys should be added below.
+
+
+        previousVelocity = characterController.velocity;
+    }
+
+
+    ///<summary>Do step sounds and head bobbing movement.</summary>
+    private void Walk(){
+        if (!stepping && !firstStep)
+        {
+            int stepSound = UnityEngine.Random.Range(0, WalkOnWoodSound.Length);
+            float stepSpeed = (1/speed) + stepOffset + stepDelay;
+            stepping = true;
+            PlayClip(WalkOnWoodSound[stepSound]);
+            Action stepOff = ()=> stepping = false;
+            StartCoroutine(Wait(stepSpeed, stepOff));
+            headBob.Bounce(speed);
+        }
+    }
+
+
+    ///<summary>Play audio clip once.</summary>
+    ///<param name="clip">AudioClip to play.</param>
+    private void PlayClip(AudioClip clip)
+    {
+        audio_play = true;
+        audio_toggleChange = true;
+        //Check if you just set the toggle to positive.
+        if (audio_play == true && audio_toggleChange == true)
+        {
+            audioSource.clip = clip;
+            audioSource.Play();
+            audio_toggleChange = false;
+        }
+        //Check if you just set the toggle to false
+        if (audio_play == false && audio_toggleChange == true)
+        {
+            //Stop the audio
+            audioSource.Stop();
+            //Ensure audio doesn't play more than once
+            audio_toggleChange = false;
+        }
+    }
+
+
+    private IEnumerator Wait(float time, Action onComplete)
+    {
+        yield return new WaitForSeconds(time);
+        onComplete();
     }
 }
