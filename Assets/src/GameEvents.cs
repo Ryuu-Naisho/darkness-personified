@@ -10,6 +10,7 @@ public class GameEvents : MonoBehaviour
     public static GameEvents events;
     public event Action<int> onDoorwayTriggerEnter;
     public event Action<int> onDoorwayTriggerExit;
+    public event Action<int> OnShapeShiftTrigger;
 
 
     private void Awake()
@@ -37,5 +38,14 @@ public class GameEvents : MonoBehaviour
         {
             onDoorwayTriggerExit(id);
         }
+    }
+
+
+    ///<summary>Trigger shape shift event.</summary>
+    ///<param name="id">int id, instance id of gameObject.</param>
+    public void ShapeShiftTrigger(int id)
+    {
+        if (OnShapeShiftTrigger != null)
+            OnShapeShiftTrigger(id);
     }
 }

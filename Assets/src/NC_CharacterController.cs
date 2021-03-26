@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,7 +16,9 @@ public class NC_CharacterController : MonoBehaviour
     public Camera playerCamera;
     public float lookSpeed;
     public float lookXLimit;
+    public float lookDistance;
     public AudioClip[] WalkOnWoodSound;
+    public AudioClip[] RunOnWoodSound;
     private CharacterController characterController;
     private AudioSource audioSource;
     private HeadBob headBob;
@@ -28,10 +30,12 @@ public class NC_CharacterController : MonoBehaviour
     private bool audio_play;
     private bool audio_toggleChange;
     private bool stepping = false;
-    private bool firstStep = true;
+    private bool isRunning = false;
     private Vector3 currentVelocity;
     private Vector3 previousVelocity;
     private float stepOffset;
+    private float walkingMoveSpeed;
+    private float RunningMoveSpeed;
 
 
 
@@ -48,7 +52,9 @@ public class NC_CharacterController : MonoBehaviour
         previousVelocity = currentVelocity;
         stepOffset = characterController.stepOffset;
         initialSpeed = speed;
-        moveSpeed = ((1/speed)+stepOffset * speed);
+        walkingMoveSpeed = ((1/speed)+stepOffset * speed);
+        RunningMoveSpeed = walkingMoveSpeed * 2;
+        moveSpeed = walkingMoveSpeed;
     }
 
     // Update is called once per frame
@@ -78,9 +84,17 @@ public class NC_CharacterController : MonoBehaviour
 
 
             if (Input.GetKeyDown("left shift"))
+            {
                 speed = runSpeed;
+                moveSpeed = RunningMoveSpeed;
+                isRunning = true;
+            }
             if (Input.GetKeyUp("left shift"))
+            {
                 speed = initialSpeed;
+                moveSpeed = walkingMoveSpeed;
+                isRunning = false;
+            }
         }
 
 
@@ -95,7 +109,7 @@ public class NC_CharacterController : MonoBehaviour
 
         if (currentVelocity != previousVelocity && canMove)
         {
-            Walk();
+            Step();
         }
         else
         {
@@ -111,6 +125,9 @@ public class NC_CharacterController : MonoBehaviour
         transform.eulerAngles = new Vector2(0, rotation.y);
 
 
+        //Set triggers off by watching them.
+        TriggerWatch();
+
         //TODO other player keys should be added below.
 
 
@@ -119,10 +136,16 @@ public class NC_CharacterController : MonoBehaviour
 
 
     ///<summary>Do step sounds and head bobbing movement.</summary>
-    private void Walk(){
+    private void Step(){
         if (!stepping)
         {
-            int stepSound = UnityEngine.Random.Range(0, WalkOnWoodSound.Length);
+            int stepSound = 0;
+            if (!isRunning)
+                stepSound = UnityEngine.Random.Range(0, WalkOnWoodSound.Length);
+            else
+            {
+                stepSound = UnityEngine.Random.Range(0, RunOnWoodSound.Length);
+            }
             float stepSpeed = (1/speed) + stepOffset + stepDelay;
             stepping = true;
             PlayClip(WalkOnWoodSound[stepSound]);
@@ -155,6 +178,25 @@ public class NC_CharacterController : MonoBehaviour
             audio_toggleChange = false;
         }
     }
+
+
+    ///<summary>Use the character's line of sight to trigger certain events. Waits one second before triggering.</summary>
+    private void TriggerWatch()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, lookDistance))
+            if (hit.collider.isTrigger)
+            {
+                string tag = hit.collider.tag;
+                if (tag == "ShapeShifter")
+                {
+                    int ID = hit.transform.parent.gameObject.GetInstanceID();
+                    Action triggerEvent = ()=> GameEvents.events.ShapeShiftTrigger(ID);
+                    StartCoroutine(Wait(1,triggerEvent));
+                }
+            }
+    }
+
 
 
     private IEnumerator Wait(float time, Action onComplete)
