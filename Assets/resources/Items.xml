@@ -5,5 +5,30 @@
             <Collected>false</Collected>
             <Memory>Good</Memory>
         </Item>
+        <Item name="BoxTwo">
+            <ID>2</ID>
+            <Collected>false</Collected>
+            <Memory>Bad</Memory>
+        </Item>
+        <Item name="BoxThree">
+            <ID>3</ID>
+            <Collected>false</Collected>
+            <Memory>Bad</Memory>
+        </Item>
+        <Item name="BoxFour">
+            <ID>4</ID>
+            <Collected>false</Collected>
+            <Memory>Bad</Memory>
+        </Item>
+        <Item name="BoxFive">
+            <ID>5</ID>
+            <Collected>false</Collected>
+            <Memory>Bad</Memory>
+        </Item>
+        <Item name="BoxSix">
+            <ID>6</ID>
+            <Collected>false</Collected>
+            <Memory>Bad</Memory>
+        </Item>
     </Items>
 </ItemCollection>

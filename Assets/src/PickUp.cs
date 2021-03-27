@@ -41,18 +41,22 @@ public class PickUp : MonoBehaviour
             {
                 if (_hit.transform.tag == tag)
                 {
-                    if (!showingHint)
+                    int hitID = _hit.transform.gameObject.GetComponent<PickUp>().ID;
+                    if (hitID == this.ID)
                     {
-                        gui.DisplayHint(hint);
-                        showingHint = true;
-                    }
+                        if (!showingHint)
+                        {
+                            gui.DisplayHint(hint);
+                            showingHint = true;
+                        }
 
 
-                    if (interactable)
-                    {
-                        //If player pressed the E key, do something
-                        if (Input.GetKeyDown("e"))
-                            Interact();
+                        if (interactable)
+                        {
+                            //If player pressed the E key, do something
+                            if (Input.GetKeyDown("e"))
+                                Interact();
+                        }
                     }
                 }
             }

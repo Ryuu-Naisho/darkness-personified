@@ -252,16 +252,16 @@ MonoBehaviour:
   lookXLimit: 45
   lookDistance: 50
   WalkOnWoodSound:
-  - {fileID: 8300000, guid: 59a86f489d03b8398865ee9574a50727, type: 3}
-  - {fileID: 8300000, guid: df7257ec41441211290198d422194ba2, type: 3}
-  - {fileID: 8300000, guid: 641199d450df386578a7b83551cc83dd, type: 3}
-  - {fileID: 8300000, guid: 5d5eea850105c8114ad49d91ee27a920, type: 3}
-  - {fileID: 8300000, guid: 52fb53d23466a4e5384bd2d8a0aa1fc5, type: 3}
-  - {fileID: 8300000, guid: 62afdbcdc87e8c1da9ed7a13e9387d0e, type: 3}
-  - {fileID: 8300000, guid: 8693883d2105ae54bb300ba4042b7261, type: 3}
-  - {fileID: 8300000, guid: 59a86f489d03b8398865ee9574a50727, type: 3}
-  - {fileID: 8300000, guid: eb4d2e243c9252889947453a610a6035, type: 3}
-  - {fileID: 8300000, guid: ce9c5170cf39fd6a28dc926a10fc940c, type: 3}
+  - {fileID: 8300000, guid: 1793c83666f7337ff99be8e905590dac, type: 3}
+  - {fileID: 8300000, guid: aca7598c1f4e134a9a5fe9f4fd39aa10, type: 3}
+  - {fileID: 8300000, guid: a0afa8266cc87b944ad0a31f7bc4b54a, type: 3}
+  - {fileID: 8300000, guid: c98a43190c7d0146b85a26544a7622b3, type: 3}
+  - {fileID: 8300000, guid: 418566f0fe02a2decb8823db9b7c5059, type: 3}
+  - {fileID: 8300000, guid: 5fb8e98a15bef041484f35d3854c0d68, type: 3}
+  - {fileID: 8300000, guid: 4563d4adf2b1371b198202319acd2d31, type: 3}
+  - {fileID: 8300000, guid: 117be90ae4a6d198c9fbb6b9c0f09de1, type: 3}
+  - {fileID: 8300000, guid: 9f51aab48d947892ba280dfe27157a93, type: 3}
+  - {fileID: 8300000, guid: 26e89b2246ac36139b1dfca539730e95, type: 3}
   RunOnWoodSound:
   - {fileID: 8300000, guid: 8c27fff1ccfe6fac399f9075fec4e7a0, type: 3}
   - {fileID: 8300000, guid: a5613fee7cc0603959ebfdb85728e337, type: 3}
