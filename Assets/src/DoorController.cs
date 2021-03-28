@@ -41,4 +41,11 @@ public class DoorController : MonoBehaviour
         if (id == parentID)
             transform.position = initialPosition;
     }
+
+
+    ///<summary>Get the ID of the parent object.</summary>
+    public int GetID()
+    {
+        return this.parentID;
+    }
 }

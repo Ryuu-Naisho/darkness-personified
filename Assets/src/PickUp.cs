@@ -53,7 +53,6 @@ public class PickUp : MonoBehaviour
 
                         if (interactable)
                         {
-                            //If player pressed the E key, do something
                             if (Input.GetKeyDown("e"))
                                 Interact();
                         }
@@ -79,7 +78,6 @@ public class PickUp : MonoBehaviour
         gui.ClearHint();
         interactable = false;
         inventory.Add(ID);
-        inventory.Show();
         gameObject.SetActive(false);
     }
 }
