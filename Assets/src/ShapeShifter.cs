@@ -37,6 +37,7 @@ public class ShapeShifter : MonoBehaviour
 
     private void Shift()
     {
+        GameEvents.events.SinkTrigger();
         Mesh mesh = Instantiate(shiftTo);
         meshFilter.sharedMesh = mesh;
     }

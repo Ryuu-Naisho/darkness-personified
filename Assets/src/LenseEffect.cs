@@ -26,25 +26,32 @@ public class LenseEffect : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         initialFieldOfView = camera.fieldOfView;
         currentFieldOfView = initialFieldOfView;
+        GameEvents.events.OnSinkTrigger += DoSink;
     }
 
     // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown("c") && !isSinking)
-        {
-            isSinking = true;
-            PlayClip(bassDrop);
-        }
+            DoSink();
 
 
-
+            
         if (isSinking)
         {
             currentFieldOfView += sinkEffectRate;
             Sink();
         }
     }
+
+
+    ///<summary>Send signal to do sink.</summary>
+    private void DoSink()
+    {
+        this.isSinking = true;
+        PlayClip(bassDrop);
+    }
+
 
 
     ///<summary>Perform sink effect with the lense. If the effect reached it's max

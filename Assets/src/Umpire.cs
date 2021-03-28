@@ -13,13 +13,19 @@ public class Umpire : MonoBehaviour
     public float minimumDistance;
     private Item item;
     private Inventory inventory;
-    private int collectedItems = 0;
     private NC_Tags tags;
+    private wCalc wcalc;
+    private GameObject apparition;
+
+
+
     // Start is called before the first frame update
     void Start()
     {
         this.tags = new NC_Tags();
+        this.wcalc = new wCalc();
         inventory = player.GetComponent<Inventory>();
+        HideApparition();
     }
 
     // Update is called once per frame
@@ -32,43 +38,93 @@ public class Umpire : MonoBehaviour
         if (inventory.HasNewItem())
         {
             item = inventory.GetLastItem();
-            if (item.Memory == tags.Bad)
-                DoDoors();
-            else if (item.Memory == tags.Good)
+            if (item.Memory == this.tags.Bad)
+                DoApparition();
+            else if (item.Memory == this.tags.Good)
                 Debug.Log("Do something good.");
             inventory.NewItemAcknowledge();
         }
     }
 
 
+    ///<summary>Randomly select weird things to happen.</summary>
     private void GetFreaky()
     {
+        int seed = UnityEngine.Random.Range(1,3);
 
+
+        switch(seed)
+        {
+            case 1:
+                DoDoors();
+                break;
+            case 2:
+                DoLights();
+                break;
+            case 3:
+                DoApparition();
+                break;
+        }
     }
 
 
+    ///<summary>Cause doors to open and close.</summary>
     private void DoDoors()
     {
         GameObject[] doors;
-            doors = GameObject.FindGameObjectsWithTag(this.tags.Door);
-
+        doors = GameObject.FindGameObjectsWithTag(this.tags.Door);
+        List<float> distances = new List<float>();
+        GameObject closestDoor;
 
             foreach (GameObject door in doors)
             {
                 float distance = Vector3.Distance(player.position, door.transform.position);
-                if (distance <= minimumDistance)
-                {
-                    int id;
-                    DoorController doorController = door.GetComponentInChildren<DoorController>();
-                    id = doorController.GetID();
-                    GameEvents.events.DoorwayTriggerEnter(id);
-
-
-                    Action closeDoor = ()=> GameEvents.events.DoorwayTriggerExit(id);
-                    StartCoroutine(Wait(waitTime, closeDoor));
-                }
+                distances.Add(distance);
             }
+
+
+            closestDoor = wcalc.GetClosest(distances, doors);
+
+            int id;
+            DoorController doorController = closestDoor.GetComponentInChildren<DoorController>();
+            id = doorController.GetID();
+            GameEvents.events.DoorwayTriggerEnter(id);
+            Action closeDoor = ()=> GameEvents.events.DoorwayTriggerExit(id);
+            StartCoroutine(Wait(waitTime, closeDoor));
     }
+
+
+
+    ///<summary>Cause lights to flicker.</summary>
+    private void DoLights()
+    {
+        GameEvents.events.LightFlickerTrigger();
+    }
+
+
+    ///<summary>Summon the apparition for gameplay.</summary>
+    private void DoApparition()
+    {
+        this.apparition.SetActive(true);
+    }
+
+
+    ///<summary>Deactivate apparition during gameplay.</summary>
+    private void HideApparition()
+    {
+
+        GameObject[] shapeShifters;
+        shapeShifters = GameObject.FindGameObjectsWithTag(this.tags.ShapeShifter);
+        foreach (GameObject shapeShifter in shapeShifters)
+        {
+            if (shapeShifter.transform == shapeShifter.transform.root)
+            {
+            this.apparition = shapeShifter;
+            shapeShifter.SetActive(false);
+            }
+        }
+    }
+
 
 
     private IEnumerator Wait(int time, Action onComplete)

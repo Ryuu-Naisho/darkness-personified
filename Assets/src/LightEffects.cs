@@ -9,6 +9,7 @@ public class LightEffects : MonoBehaviour
 
     public float lowestLightIntensity;
     public int flickerSpeed;
+    public int flickerTime;
     private Light light;
     private float initialIntensity;
     private bool powered = true;
@@ -18,6 +19,7 @@ public class LightEffects : MonoBehaviour
     {
         light = GetComponent<Light>();
         initialIntensity = light.intensity;
+        GameEvents.events.OnLightFlickerTrigger += Flicker;
     }
 
     // Update is called once per frame
@@ -34,6 +36,7 @@ public class LightEffects : MonoBehaviour
         {
             Action flickerLights = ()=> ToggleLight();
             StartCoroutine(Wait(flickerSpeed, flickerLights));
+            StopFlicker();
         }
     }
 
@@ -66,6 +69,26 @@ public class LightEffects : MonoBehaviour
     {
         light.intensity = initialIntensity;
     }
+
+
+    ///<summary>Flicker lights.</summary>
+    private void Flicker()
+    {
+        this.flicker = true;
+    }
+
+
+    ///<summary>Send signal to stop flicker.</summary>
+    private void StopFlicker()
+    {
+        Action stopFlicker = ()=> 
+        {
+            this.flicker = false;
+            LightOn();
+        };
+        StartCoroutine(Wait(flickerTime, stopFlicker));
+    }
+
 
 
     private IEnumerator Wait(int time, Action onComplete)
