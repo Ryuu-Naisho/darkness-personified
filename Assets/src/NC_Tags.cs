@@ -5,7 +5,20 @@ public class NC_Tags
     private string _PickUpItem = "PickUpItem";
     private string _Player = "Player";
     private string _ShapeShifter = "ShapeShifter";
+    private string _bad = "Bad";
+    private string _good = "Good";
 
+
+    public string Bad
+    {
+        get => this._bad;
+    }
+
+
+    public string Good
+    {
+        get => this._good;
+    }
 
 
 
