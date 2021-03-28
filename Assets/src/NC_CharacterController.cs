@@ -183,6 +183,7 @@ public class NC_CharacterController : MonoBehaviour
     ///<summary>Use the character's line of sight to trigger certain events. Waits one second before triggering.</summary>
     private void TriggerWatch()
     {
+        //TODO Fix raycast too thin to catch object.
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, lookDistance))
             if (hit.collider.isTrigger)
@@ -191,8 +192,7 @@ public class NC_CharacterController : MonoBehaviour
                 if (tag == "ShapeShifter")
                 {
                     int ID = hit.transform.parent.gameObject.GetInstanceID();
-                    Action triggerEvent = ()=> GameEvents.events.ShapeShiftTrigger(ID);
-                    StartCoroutine(Wait(1,triggerEvent));
+                    GameEvents.events.ShapeShiftTrigger(ID);
                 }
             }
     }

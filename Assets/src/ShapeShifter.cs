@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ public class ShapeShifter : MonoBehaviour
 
 
     public Mesh shiftTo;
+    public float shiftTime;
     private MeshFilter meshFilter;
     private int parentID;
 
@@ -39,6 +41,14 @@ public class ShapeShifter : MonoBehaviour
     {
         GameEvents.events.SinkTrigger();
         Mesh mesh = Instantiate(shiftTo);
-        meshFilter.sharedMesh = mesh;
+        Action doShift = () => meshFilter.sharedMesh = mesh;
+        StartCoroutine(Wait(shiftTime, doShift));
+    }
+
+
+        private IEnumerator Wait(float time, Action onComplete)
+    {
+        yield return new WaitForSeconds(time);
+        onComplete();
     }
 }
