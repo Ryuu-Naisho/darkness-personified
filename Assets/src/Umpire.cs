@@ -16,6 +16,8 @@ public class Umpire : MonoBehaviour
     private NC_Tags tags;
     private wCalc wcalc;
     private GameObject apparition;
+    private List<int> freakyActions = new List<int>(){1,2,3};
+    private bool gameOver = false;
 
 
 
@@ -31,27 +33,38 @@ public class Umpire : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (inventory.HasKey())
+
+
+        int badItemsLeft = freakyActions.Count;
+        if (badItemsLeft == 0)
+            gameOver = true;
+            
+        if (inventory.HasKey() && !gameOver)
             Debug.Log("HAS KEY");
 
 
-        if (inventory.HasNewItem())
+        if (inventory.HasNewItem() && !gameOver)
         {
             item = inventory.GetLastItem();
             if (item.Memory == this.tags.Bad)
-                DoApparition();
+                GetFreaky();
             else if (item.Memory == this.tags.Good)
                 Debug.Log("Do something good.");
             inventory.NewItemAcknowledge();
         }
+
+
+        if (gameOver)
+            Debug.Log("Game over.");
     }
 
 
     ///<summary>Randomly select weird things to happen.</summary>
     private void GetFreaky()
     {
-        int seed = UnityEngine.Random.Range(1,3);
-
+        int availableActions = freakyActions.Count - 1;
+        int index = UnityEngine.Random.Range(0,availableActions);
+        int seed = freakyActions[index];
 
         switch(seed)
         {
@@ -65,6 +78,9 @@ public class Umpire : MonoBehaviour
                 DoApparition();
                 break;
         }
+
+
+        freakyActions.Remove(seed);
     }
 
 
