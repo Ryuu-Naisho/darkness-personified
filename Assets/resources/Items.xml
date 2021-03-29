@@ -30,5 +30,10 @@
             <Collected>false</Collected>
             <Memory>Bad</Memory>
         </Item>
+        <Item name="Key">
+            <ID>7</ID>
+            <Collected>false</Collected>
+            <Memory>Good</Memory>
+        </Item>
     </Items>
 </ItemCollection>

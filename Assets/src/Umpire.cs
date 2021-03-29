@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Umpire : MonoBehaviour
 {
@@ -38,9 +39,9 @@ public class Umpire : MonoBehaviour
         int badItemsLeft = freakyActions.Count;
         if (badItemsLeft == 0)
             gameOver = true;
-            
+
         if (inventory.HasKey() && !gameOver)
-            Debug.Log("HAS KEY");
+            SceneManager.LoadScene("GameWon");
 
 
         if (inventory.HasNewItem() && !gameOver)
@@ -54,14 +55,16 @@ public class Umpire : MonoBehaviour
         }
 
 
+        
         if (gameOver)
-            Debug.Log("Game over.");
+            SceneManager.LoadScene("GameOver");
     }
 
 
     ///<summary>Randomly select weird things to happen.</summary>
     private void GetFreaky()
     {
+        //TODO add two more actions.
         int availableActions = freakyActions.Count - 1;
         int index = UnityEngine.Random.Range(0,availableActions);
         int seed = freakyActions[index];

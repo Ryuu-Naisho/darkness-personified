@@ -62,14 +62,7 @@ public class Inventory : MonoBehaviour
     public bool HasKey()
     {
         int keyId = 7;
-        bool hasKey = false;
-        Item key = GetItem(keyId);
-        if (key.ID == keyId)
-            hasKey = true;
-        else
-        {
-            hasKey = false;
-        }
+        bool hasKey = inventory.Exists(item => item.ID == keyId);
         return hasKey;
     }
 
