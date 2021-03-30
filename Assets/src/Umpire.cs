@@ -48,7 +48,7 @@ public class Umpire : MonoBehaviour
         {
             item = inventory.GetLastItem();
             if (item.Memory == this.tags.Bad)
-                GetFreaky();
+                DoApparition();   //GetFreaky();
             else if (item.Memory == this.tags.Good)
                 Debug.Log("Do something good.");
             inventory.NewItemAcknowledge();

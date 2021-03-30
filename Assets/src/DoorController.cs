@@ -2,18 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+[RequireComponent(typeof(Animator))]
 public class DoorController : MonoBehaviour
 {
     private Vector3 initialPosition;
-    private int parentID;
+    private int ID;
+    private Animator animator;
 
 
 
     // Start is called before the first frame update
     void Start()
     {
-        parentID = transform.parent.gameObject.GetInstanceID();
-        initialPosition = transform.position;
+        ID = gameObject.GetInstanceID();
+        animator = GetComponent<Animator>();
         GameEvents.events.onDoorwayTriggerEnter += OnDoorwayOpen;
         GameEvents.events.onDoorwayTriggerExit += OnDoorwayClose;
     }
@@ -21,7 +24,6 @@ public class DoorController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
     }
 
 
@@ -29,8 +31,8 @@ public class DoorController : MonoBehaviour
     ///<param name="id">int id, instance id of the gameObject.</param>
     private void OnDoorwayOpen(int id)
     {
-        if (id == parentID)
-            transform.position += Vector3.up * 5;
+        if (id == ID)
+            animator.SetTrigger("Open");
     }
 
 
@@ -38,14 +40,14 @@ public class DoorController : MonoBehaviour
     ///<param name="id">int id, instance id of the gameObject.</param>
     private void OnDoorwayClose(int id)
     {
-        if (id == parentID)
-            transform.position = initialPosition;
+        if (id == ID)
+            animator.SetTrigger("Close");
     }
 
 
     ///<summary>Get the ID of the parent object.</summary>
     public int GetID()
     {
-        return this.parentID;
+        return this.ID;
     }
 }
