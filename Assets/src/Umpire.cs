@@ -26,7 +26,6 @@ public class Umpire : MonoBehaviour
     private AudioSource audioSource;
     private bool audio_play;
     private bool audio_toggleChange;
-    private bool shakePlayed = false;
 
 
 
@@ -43,12 +42,6 @@ public class Umpire : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-
-        int badItemsLeft = freakyActions.Count;
-        if (badItemsLeft == 0)
-            gameOver = true;
-
         if (inventory.HasKey() && !gameOver)
             SceneManager.LoadScene("GameWon");
 
@@ -73,10 +66,14 @@ public class Umpire : MonoBehaviour
     ///<summary>Randomly select weird things to happen.</summary>
     private void GetFreaky()
     {
+        if (freakyActions.Count == 0)
+        {
+            gameOver = true;
+            return;
+        }
         int availableActions = freakyActions.Count - 1;
         int index = UnityEngine.Random.Range(0,availableActions);
         int seed = freakyActions[index];
-
         switch(seed)
         {
             case 1:
@@ -89,6 +86,9 @@ public class Umpire : MonoBehaviour
                 DoApparition();
                 break;
             case 4:
+                DoShakeHouse();
+                break;
+            default:
                 DoShakeHouse();
                 break;
         }
@@ -159,7 +159,6 @@ public class Umpire : MonoBehaviour
 
     private void DoShakeHouse()
     {
-        if (!shakePlayed)
             PlayClip(shakeSound);
     }
 
@@ -185,9 +184,6 @@ public class Umpire : MonoBehaviour
             //Ensure audio doesn't play more than once
             audio_toggleChange = false;
         }
-
-
-        shakePlayed = true;
     }
 
 
