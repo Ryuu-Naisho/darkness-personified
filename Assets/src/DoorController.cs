@@ -7,7 +7,7 @@ using UnityEngine;
 [RequireComponent(typeof(AudioSource))]
 public class DoorController : MonoBehaviour
 {
-    public AudioClip doorCreakSound;
+    public AudioClip[] doorCreakSound;
     public AudioClip doorClosedSound;
     private Vector3 initialPosition;
     private int ID;
@@ -40,7 +40,8 @@ public class DoorController : MonoBehaviour
     {
         if (id == ID)
         {
-            PlayClip(doorCreakSound);
+            int index = UnityEngine.Random.Range(0, doorCreakSound.Length);
+            PlayClip(doorCreakSound[index]);
             animator.SetTrigger("Open");
         }
     }

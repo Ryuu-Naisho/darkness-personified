@@ -1,7 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+[RequireComponent(typeof(AudioSource))]
 public class PickUp : MonoBehaviour
 {
 
@@ -13,9 +16,15 @@ public class PickUp : MonoBehaviour
     public bool interactable;
     public bool displayHint;
     public int ID;
+    public AudioClip[] clips;
     private NC_GUI gui;
     private Inventory inventory;
     private bool showingHint = false;
+    private AudioSource audioSource;
+    private bool audio_play;
+    private bool audio_toggleChange;
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -23,6 +32,7 @@ public class PickUp : MonoBehaviour
         hint = defaultHint;
         gui = player.GetComponent<NC_GUI>();
         inventory = player.GetComponent<Inventory>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -75,9 +85,44 @@ public class PickUp : MonoBehaviour
 
     public void Interact()
     {
+        int index = UnityEngine.Random.Range(0, clips.Length);
+        PlayClip(clips[index]);
         gui.ClearHint();
         interactable = false;
         inventory.Add(ID);
-        gameObject.SetActive(false);
+        transform.position += Vector3.down * 100;
+        Action hide = () => gameObject.SetActive(false);
+        StartCoroutine(Wait(1, hide));
+    }
+
+
+        ///<summary>Play audio clip once.</summary>
+    ///<param name="clip">AudioClip to play.</param>
+    private void PlayClip(AudioClip clip)
+    {
+        audio_play = true;
+        audio_toggleChange = true;
+        //Check if you just set the toggle to positive.
+        if (audio_play == true && audio_toggleChange == true)
+        {
+            audioSource.clip = clip;
+            audioSource.Play();
+            audio_toggleChange = false;
+        }
+        //Check if you just set the toggle to false
+        if (audio_play == false && audio_toggleChange == true)
+        {
+            //Stop the audio
+            audioSource.Stop();
+            //Ensure audio doesn't play more than once
+            audio_toggleChange = false;
+        }
+    }
+
+
+    private IEnumerator Wait(float time, Action onComplete)
+    {
+        yield return new WaitForSeconds(time);
+        onComplete();
     }
 }
