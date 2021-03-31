@@ -3,7 +3,7 @@
         <Item name="BoxOne">
             <ID>1</ID>
             <Collected>false</Collected>
-            <Memory>Good</Memory>
+            <Memory>Bad</Memory>
         </Item>
         <Item name="ChildHoodDiary">
             <ID>2</ID>
@@ -34,6 +34,16 @@
             <ID>7</ID>
             <Collected>false</Collected>
             <Memory>Good</Memory>
+        </Item>
+        <Item name="Picture">
+            <ID>8</ID>
+            <Collected>false</Collected>
+            <Memory>Good</Memory>
+        </Item>
+        <Item name="TennisBall">
+        <ID>9</ID>
+        <Collected>false</Collected>
+        <Memory>Good</Memory>
         </Item>
     </Items>
 </ItemCollection>
