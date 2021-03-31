@@ -20,6 +20,7 @@ public class DoorTrigger : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         GameEvents.events.DoorwayTriggerEnter(parentID);
+        int id = transform.parent.gameObject.GetInstanceID();
     }
 
 

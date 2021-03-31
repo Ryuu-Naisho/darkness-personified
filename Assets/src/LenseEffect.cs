@@ -32,8 +32,8 @@ public class LenseEffect : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown("c") && !isSinking)
-            DoSink();
+        //if (Input.GetKeyDown("c") && !isSinking)
+          //  DoSink();
 
 
             
