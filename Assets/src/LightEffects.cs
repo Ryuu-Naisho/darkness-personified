@@ -25,10 +25,10 @@ public class LightEffects : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown("l"))
-            ToggleLight();
-        else if (Input.GetKeyDown("f"))
-            flicker = flicker ? false : true;
+        //if (Input.GetKeyDown("l"))
+        //    ToggleLight();
+        //else if (Input.GetKeyDown("f"))
+        //    flicker = flicker ? false : true;
 
 
 

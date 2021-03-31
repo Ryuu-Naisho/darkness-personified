@@ -61,7 +61,7 @@ public class MainMenu : MonoBehaviour
     ///<summary>Load the main scene.</summary>
     private void startGame()
     {
-        SceneManager.LoadScene("MainScene");
+        SceneManager.LoadScene("Debug_Room");
     }
 
 

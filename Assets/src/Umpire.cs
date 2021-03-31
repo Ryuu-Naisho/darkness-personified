@@ -4,11 +4,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
+[RequireComponent(typeof(AudioSource))]
 public class Umpire : MonoBehaviour
 {
 
 
     public Transform player;
+    public AudioClip shakeSound;
+    public AudioClip smashDoorSound;
     public int maxBadItems;
     public int waitTime;
     public float minimumDistance;
@@ -17,8 +21,12 @@ public class Umpire : MonoBehaviour
     private NC_Tags tags;
     private wCalc wcalc;
     private GameObject apparition;
-    private List<int> freakyActions = new List<int>(){1,2,3};
+    private List<int> freakyActions = new List<int>(){1,2,3,4};
     private bool gameOver = false;
+    private AudioSource audioSource;
+    private bool audio_play;
+    private bool audio_toggleChange;
+    private bool shakePlayed = false;
 
 
 
@@ -27,6 +35,7 @@ public class Umpire : MonoBehaviour
     {
         this.tags = new NC_Tags();
         this.wcalc = new wCalc();
+        this.audioSource = GetComponent<AudioSource>();
         inventory = player.GetComponent<Inventory>();
         HideApparition();
     }
@@ -48,7 +57,7 @@ public class Umpire : MonoBehaviour
         {
             item = inventory.GetLastItem();
             if (item.Memory == this.tags.Bad)
-                DoApparition();   //GetFreaky();
+                GetFreaky();
             else if (item.Memory == this.tags.Good)
                 Debug.Log("Do something good.");
             inventory.NewItemAcknowledge();
@@ -64,7 +73,6 @@ public class Umpire : MonoBehaviour
     ///<summary>Randomly select weird things to happen.</summary>
     private void GetFreaky()
     {
-        //TODO add two more actions.
         int availableActions = freakyActions.Count - 1;
         int index = UnityEngine.Random.Range(0,availableActions);
         int seed = freakyActions[index];
@@ -79,6 +87,9 @@ public class Umpire : MonoBehaviour
                 break;
             case 3:
                 DoApparition();
+                break;
+            case 4:
+                DoShakeHouse();
                 break;
         }
 
@@ -108,6 +119,7 @@ public class Umpire : MonoBehaviour
             DoorController doorController = closestDoor.GetComponentInChildren<DoorController>();
             id = doorController.GetID();
             GameEvents.events.DoorwayTriggerEnter(id);
+            PlayClip(smashDoorSound);
             Action closeDoor = ()=> GameEvents.events.DoorwayTriggerExit(id);
             StartCoroutine(Wait(waitTime, closeDoor));
     }
@@ -142,6 +154,40 @@ public class Umpire : MonoBehaviour
             shapeShifter.SetActive(false);
             }
         }
+    }
+
+
+    private void DoShakeHouse()
+    {
+        if (!shakePlayed)
+            PlayClip(shakeSound);
+    }
+
+
+    ///<summary>Play audio clip once.</summary>
+    ///<param name="clip">AudioClip to play.</param>
+    private void PlayClip(AudioClip clip)
+    {
+        audio_play = true;
+        audio_toggleChange = true;
+        //Check if you just set the toggle to positive.
+        if (audio_play == true && audio_toggleChange == true)
+        {
+            audioSource.clip = clip;
+            audioSource.Play();
+            audio_toggleChange = false;
+        }
+        //Check if you just set the toggle to false
+        if (audio_play == false && audio_toggleChange == true)
+        {
+            //Stop the audio
+            audioSource.Stop();
+            //Ensure audio doesn't play more than once
+            audio_toggleChange = false;
+        }
+
+
+        shakePlayed = true;
     }
 
 
